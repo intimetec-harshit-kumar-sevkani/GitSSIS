@@ -1,0 +1,17 @@
+name: Validate SSIS Packages
+
+on:
+  push:
+    branches:
+      - main  # Trigger only on the main branch
+
+jobs:
+  validate:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Run PowerShell Script
+        run: pwsh -File C:\Users\harshit.k.sevkani\script.ps1
