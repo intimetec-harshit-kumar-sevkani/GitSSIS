@@ -12,4 +12,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run PowerShell Script
-        run: pwsh -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
+        run: pwsh -Command "& { . './NewScript.ps1'; Check-SSISConnectionManagers -projectDirectory './Integration Services Project3' }"
