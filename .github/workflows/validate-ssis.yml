@@ -5,11 +5,16 @@ on:
 
 jobs:
   validate:
-    runs-on: self-hosted
+    runs-on: windows-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+
+      - name: Install SSIS Runtime
+        run: |
+          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2104003" -OutFile SSISRuntime.exe
+          Start-Process -FilePath ".\SSISRuntime.exe" -ArgumentList "/quiet" -Wait
 
       - name: Run PowerShell Script
         run: pwsh -Command "& { . './NewScript.ps1'; Check-SSISConnectionManagers -projectDirectory './Integration Services Project3' }"
