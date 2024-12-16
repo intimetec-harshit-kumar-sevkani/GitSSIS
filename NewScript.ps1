@@ -1,5 +1,9 @@
 # Import the required assembly for SSIS runtime
-Add-Type -Path "C:\Program Files (x86)\Microsoft SQL Server\150\SDK\Assemblies\Microsoft.SQLServer.ManagedDTS.dll"
+Add-Type -Path "$PSScriptRoot\lib\Microsoft.SQLServer.ManagedDTS.dll"
+
+param (
+    [string]$projectDirectory = "$PSScriptRoot\Integration Services Project3"
+)
 
 function Check-SSISConnectionManagers {
     param (
@@ -72,8 +76,6 @@ function Check-SSISConnectionManagers {
     }
 }
 
-# Path to the SSIS project directory
-$projectDirectory = "C:\Users\harshit.k.sevkani\source\repos\Integration Services Project1\Integration Services Project3"
-
 # Check connection managers for all packages in the project
 Check-SSISConnectionManagers -projectDirectory $projectDirectory
+
