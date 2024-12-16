@@ -2,8 +2,6 @@ name: Validate SSIS Packages
 
 on:
   push:
-    branches:
-      - main  # Trigger only on the main branch
 
 jobs:
   validate:
