@@ -18,5 +18,5 @@ jobs:
       - name: Validate SSIS Packages
         shell: pwsh # Use PowerShell Core
         run: |
-          pwsh -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
+          "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
 
