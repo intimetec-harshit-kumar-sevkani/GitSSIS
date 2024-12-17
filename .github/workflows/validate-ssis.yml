@@ -26,7 +26,7 @@ jobs:
 
       # Step 4: Run the PowerShell script
       - name: Run Validation Script
-        shell: pwsh  # Ensures PowerShell Core is used
+        shell: powershell
         run: |
           "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
 
