@@ -4,19 +4,32 @@ on:
   push:
 
 jobs:
-  validate:
-    runs-on: self-hosted
+  validate-ssis:
+    runs-on: self-hosted  # Uses your self-hosted runner
 
     steps:
+      # Step 1: Check out the repository
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Ensure Dependencies for SSIS
+      # Step 2: Ensure .NET Framework is installed
+      - name: Verify .NET Framework
         run: |
-          Write-Host "Checking for SSIS Runtime..."
+          powershell -Command "Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -like '*Microsoft .NET Framework*' }"
 
-      - name: Validate SSIS Packages
-        shell: pwsh # Use PowerShell Core
+      # Step 3: Verify SSIS runtime dependency
+      - name: Verify SSIS Runtime DLL
+        run: |
+          if (!(Test-Path -Path "$env:USERPROFILE\lib\Microsoft.SQLServer.ManagedDTS.dll")) {
+              Write-Error "SSIS Runtime DLL is missing. Ensure SSIS runtime is installed."
+          }
+
+      # Step 4: Run the PowerShell script
+      - name: Run Validation Script
+        shell: pwsh  # Ensures PowerShell Core is used
         run: |
           "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
 
+      # Step 5: Log Success
+      - name: Log Success
+        run: echo "SSIS Package Validation Completed Successfully."
