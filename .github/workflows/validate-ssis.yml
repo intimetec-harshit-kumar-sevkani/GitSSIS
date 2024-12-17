@@ -12,10 +12,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Step 2: Ensure .NET Framework is installed
+      # Step 2: Verify .NET Framework
       - name: Verify .NET Framework
         run: |
-          powershell -Command "Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -like '*Microsoft .NET Framework*' }"
+          powershell -Command "
+            Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse |
+            Get-ItemProperty -Name Version -ErrorAction SilentlyContinue |
+            Where-Object { $_.Version -match '^\d+\.\d+' } |
+            Select-Object PSChildName, Version
+          "
 
       # Step 3: Verify SSIS runtime dependency
       - name: Verify SSIS Runtime DLL
