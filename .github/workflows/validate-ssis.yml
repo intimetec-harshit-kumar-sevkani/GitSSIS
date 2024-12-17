@@ -20,4 +20,4 @@ jobs:
         shell: pwsh
         run: |
           # Execute the PowerShell script
-          pwsh -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
+          powershell -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
