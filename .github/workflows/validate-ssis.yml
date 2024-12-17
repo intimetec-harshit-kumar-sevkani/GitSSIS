@@ -1,46 +1,23 @@
 name: Validate SSIS Packages
 
 on:
-  push:
+  push: # Trigger the workflow on push events
 
 jobs:
   validate:
-    runs-on: windows-latest
+    runs-on: self-hosted # Use your self-hosted runner
 
     steps:
-      # Step 1: Check out the repository
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Step 2: Download and verify SSIS Runtime
-      - name: Download SSIS Runtime
+      - name: Ensure Dependencies for SSIS
         run: |
-          Write-Host "Downloading SSIS Runtime..."
-          Invoke-WebRequest -Uri "https://go.microsoft.com/fwlink/?linkid=2104003" -OutFile SSISRuntime.exe
-          if (!(Test-Path -Path ".\SSISRuntime.exe")) {
-              Write-Error "SSISRuntime.exe was not downloaded successfully."
-          } else {
-              Write-Host "SSISRuntime.exe downloaded successfully."
-          }
+          # Verify .NET Framework and SSIS runtime are installed
+          Write-Host "Checking for SSIS Runtime..."
 
-      # Step 3: Unblock the SSIS Runtime executable
-      - name: Unblock SSIS Runtime
-        run: Unblock-File -Path ".\SSISRuntime.exe"
-
-      # Step 4: Install SSIS Runtime
-      - name: Install SSIS Runtime
-        run: Start-Process -FilePath ".\SSISRuntime.exe" -ArgumentList "/quiet /log InstallLog.txt" -Wait
-
-      # Step 5: Verify the installation (Optional)
-      - name: Check Installation Log
+      - name: Validate SSIS Packages
+        shell: pwsh
         run: |
-          if (!(Test-Path -Path ".\InstallLog.txt")) {
-              Write-Error "Installation log file is missing. Installation might have failed."
-          } else {
-              Write-Host "Installation log file found. Verifying installation success..."
-              Get-Content -Path ".\InstallLog.txt"
-          }
-
-      # Step 6: Run the PowerShell script to validate SSIS packages
-      - name: Run PowerShell Script
-        run: pwsh -Command "& { . './NewScript.ps1'; Check-SSISConnectionManagers -projectDirectory './Integration Services Project3' }"
+          # Execute the PowerShell script
+          pwsh -File "./NewScript.ps1" -projectDirectory "./Integration Services Project3"
